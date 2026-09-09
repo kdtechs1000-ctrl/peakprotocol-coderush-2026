@@ -5,7 +5,6 @@ import DisasterMap from './components/DisasterMap';
 import RecentReports from './components/RecentReports';
 import PlanRoute from './components/PlanRoute';
 import SafeZones from './components/SafeZones';
-import AccountView from './components/AccountView';
 import ReportHazardModal from './components/ReportHazardModal';
 import SosButton from './components/SosButton';
 import EmergencyHotlines from './components/EmergencyHotlines';
