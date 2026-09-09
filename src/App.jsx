@@ -89,7 +89,7 @@ function AppContent() {
 
             {activeTab === 'safeZones' && <SafeZones />}
 
-            {activeTab === 'account' && <AccountView />}
+
           </>
         )}
       </main>
