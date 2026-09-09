@@ -65,11 +65,13 @@ export default function PlanRoute() {
   const [loading, setLoading] = useState(false);
   const [routeResults, setRouteResults] = useState(null);
 
+  const getHubLabel = (hub) => (language === 'np' ? (hub.name_np || hub.name) : hub.name);
+
   // Quick hub selection
   const handleQuickHub = (hub) => {
     if (startLabel === hub.name) return;
     setDestPoint([hub.lat, hub.lng]);
-    setDestLabel(language === 'np' ? hub.name_np : hub.name);
+    setDestLabel(getHubLabel(hub));
   };
 
   // Swap locations
@@ -86,10 +88,10 @@ export default function PlanRoute() {
   const handleUseCurrentLocation = (target) => {
     if (target === 'start') {
       setStartPoint([userLocation.lat, userLocation.lng]);
-      setStartLabel(language === 'np' ? 'मेरो हालको स्थान' : 'My Current Location');
+      setStartLabel(t.common.yourCurrentLocation);
     } else {
       setDestPoint([userLocation.lat, userLocation.lng]);
-      setDestLabel(language === 'np' ? 'मेरो हालको स्थान' : 'My Current Location');
+      setDestLabel(t.common.yourCurrentLocation);
     }
   };
 
@@ -136,7 +138,7 @@ export default function PlanRoute() {
               onClick={() => handleQuickHub(hub)}
               className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors border border-slate-200"
             >
-              + {language === 'np' ? hub.name_np : hub.name}
+              + {getHubLabel(hub)}
             </button>
           ))}
         </div>

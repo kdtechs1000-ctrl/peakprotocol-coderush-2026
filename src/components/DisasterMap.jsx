@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMode } from '../context/ModeContext';
+import { translateHazardType, translateSeverity } from '../i18n/translations';
 import { 
   MapContainer, 
   TileLayer, 
@@ -70,7 +71,8 @@ export default function DisasterMap() {
     setIsReportingModalOpen, 
     userLocation,
     language,
-    t 
+    t,
+    translateLiveContent
   } = useMode();
 
   const [mapType, setMapType] = useState('street'); // 'street' or 'satellite'
@@ -125,7 +127,7 @@ export default function DisasterMap() {
             mapType === 'street' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Street
+          {t.map.street}
         </button>
         <button
           onClick={() => setMapType('satellite')}
@@ -133,7 +135,7 @@ export default function DisasterMap() {
             mapType === 'satellite' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          Satellite
+          {t.map.satellite}
         </button>
       </div>
 
@@ -165,11 +167,11 @@ export default function DisasterMap() {
               <div className="p-1">
                 <div className="flex items-center gap-1 text-rose-600 font-bold text-xs uppercase">
                   <AlertTriangle className="w-3.5 h-3.5" />
-                  <span>{zone.severity} HAZARD GEOFENCE</span>
+                  <span>{translateSeverity(language, zone.severity)} {t.map.hazardGeofence}</span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm mt-1">{zone.title}</h4>
+                <h4 className="font-bold text-slate-900 text-sm mt-1">{translateLiveContent(zone.title)}</h4>
                 <p className="text-xs text-slate-600 mt-1">
-                  Active evacuation area. Traversing this perimeter triggers immediate system warning.
+                  {t.map.activeEvacuationArea}
                 </p>
               </div>
             </Popup>
@@ -193,11 +195,11 @@ export default function DisasterMap() {
               <div className="p-1">
                 <div className="flex items-center gap-1 text-blue-600 font-bold text-xs uppercase">
                   <Droplet className="w-3.5 h-3.5" />
-                  <span>{vec.water_level_status} WATER VECTOR</span>
+                  <span>{vec.water_level_status} {t.map.waterVector}</span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm mt-1">{vec.river_or_route_name}</h4>
+                <h4 className="font-bold text-slate-900 text-sm mt-1">{translateLiveContent(vec.river_or_route_name)}</h4>
                 <p className="text-xs text-slate-600 mt-1">
-                  Flow Rate: {vec.flow_rate_m3s} m³/s | Heading: {vec.heading_direction}
+                  {t.map.flowRate}: {vec.flow_rate_m3s} m³/s | {t.map.heading}: {vec.heading_direction}
                 </p>
               </div>
             </Popup>
@@ -215,19 +217,19 @@ export default function DisasterMap() {
               <div className="p-1 max-w-xs">
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="font-bold text-xs text-rose-600 uppercase tracking-wider">
-                    {report.hazard_type}
+                    {translateHazardType(language, report.hazard_type)}
                   </span>
                   {report.ai_detected && (
                     <span className="px-1.5 py-0.2 rounded bg-purple-100 text-purple-700 font-bold text-[10px]">
-                      AI DETECTED
+                      {t.map.aiDetected}
                     </span>
                   )}
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">{report.title}</h4>
-                <p className="text-xs text-slate-600 mt-1">{report.description}</p>
+                <h4 className="font-bold text-slate-900 text-sm">{translateLiveContent(report.title)}</h4>
+                <p className="text-xs text-slate-600 mt-1">{translateLiveContent(report.description)}</p>
                 <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                  <span>Lat: {report.latitude?.toFixed(3)}, Lng: {report.longitude?.toFixed(3)}</span>
-                  <span className="font-semibold text-rose-500">{report.severity}</span>
+                  <span>{t.map.latitude}: {report.latitude?.toFixed(3)}, {t.map.longitude}: {report.longitude?.toFixed(3)}</span>
+                  <span className="font-semibold text-rose-500">{translateSeverity(language, report.severity)}</span>
                 </div>
               </div>
             </Popup>
@@ -246,22 +248,22 @@ export default function DisasterMap() {
                 <div className="p-1 max-w-xs">
                   <div className="flex items-center gap-1 text-emerald-600 font-bold text-xs uppercase">
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>VERIFIED SAFE SHELTER</span>
+                    <span>{t.map.verifiedSafeShelter}</span>
                   </div>
-                  <h4 className="font-bold text-slate-900 text-sm mt-1">{sh.name}</h4>
+                  <h4 className="font-bold text-slate-900 text-sm mt-1">{translateLiveContent(sh.name)}</h4>
                   <p className="text-xs text-slate-600 mt-1">
-                    Capacity: {sh.current_occupancy} / {sh.capacity} persons
+                    {t.map.capacity}: {sh.current_occupancy} / {sh.capacity} {t.map.persons}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-1">
                     {sh.facilities?.map((f, i) => (
                       <span key={i} className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-200">
-                        {f}
+                        {translateLiveContent(f)}
                       </span>
                     ))}
                   </div>
                   {sh.contact && (
                     <p className="text-xs font-semibold text-slate-700 mt-2">
-                      Tel: <a href={`tel:${sh.contact}`} className="text-emerald-700 underline">{sh.contact}</a>
+                      {t.map.telephone}: <a href={`tel:${sh.contact}`} className="text-emerald-700 underline">{sh.contact}</a>
                     </p>
                   )}
                 </div>
@@ -282,7 +284,7 @@ export default function DisasterMap() {
         >
           <Popup>
             <div className="text-xs font-semibold">
-              📍 {language === 'np' ? 'तपाईंको हालको स्थान' : 'Your Current Location'}
+              📍 {t.common.yourCurrentLocation}
             </div>
           </Popup>
         </CircleMarker>

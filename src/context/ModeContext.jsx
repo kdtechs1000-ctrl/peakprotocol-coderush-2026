@@ -15,7 +15,8 @@ import {
   clearQueuedReports
 } from '../services/indexedDbService';
 import { fetchAllLiveDisasterEvents } from '../services/liveDisasterService';
-import { translations } from '../i18n/translations';
+import { translateLiveText as translateLocalLiveText, translations } from '../i18n/translations';
+import { translateTexts } from '../services/translationService';
 
 const ModeContext = createContext();
 
@@ -41,8 +42,45 @@ export function ModeProvider({ children }) {
 
   // Notification / toast
   const [alertBanner, setAlertBanner] = useState(null);
+  const [liveTranslations, setLiveTranslations] = useState({});
 
   const t = translations[language] || translations.en;
+  const translateLiveContent = (text) => liveTranslations[`${language}:${text}`] || translateLocalLiveText(language, text);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (language === 'en') {
+      setLiveTranslations((previous) => Object.keys(previous).length ? {} : previous);
+      return () => { cancelled = true; };
+    }
+
+    const liveTexts = [
+      ...reports.flatMap((report) => [report.title, report.description]),
+      ...redZones.map((zone) => zone.title),
+      ...hazardVectors.map((vector) => vector.river_or_route_name),
+      ...safeShelters.flatMap((shelter) => [shelter.name, ...(shelter.facilities || [])])
+    ].filter((text, index, values) => text && values.indexOf(text) === index)
+      .filter((text) => !liveTranslations[`${language}:${text}`]);
+
+    if (!liveTexts.length) return () => { cancelled = true; };
+
+    translateTexts(language, liveTexts)
+      .then((translated) => {
+        if (cancelled) return;
+        setLiveTranslations((previous) => ({
+          ...previous,
+          ...Object.fromEntries(Object.entries(translated).map(([source, value]) => [
+            `${language}:${source}`,
+            value
+          ]))
+        }));
+      })
+      .catch((error) => {
+        console.warn('Live translation API unavailable; using local translations:', error.message);
+      });
+
+    return () => { cancelled = true; };
+  }, [language, reports, redZones, hazardVectors, safeShelters, liveTranslations]);
 
   // Function to query actual live public disaster APIs (USGS Seismic + BIPAD Portal + Open-Meteo)
   const refreshLiveFeeds = async () => {
@@ -379,7 +417,8 @@ export function ModeProvider({ children }) {
         isLoadingLiveFeeds,
         alertBanner,
         setAlertBanner,
-        t
+        t,
+        translateLiveContent
       }}
     >
       {children}

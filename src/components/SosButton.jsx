@@ -41,11 +41,11 @@ export default function SosButton() {
             </div>
 
             <h3 className="text-xl font-black text-slate-900 mb-1 uppercase tracking-tight">
-              {language === 'np' ? 'एसओएस संकेत प्रसारित गरियो!' : 'Emergency SOS Transmitted!'}
+              {t.sos.transmitted}
             </h3>
             
             <p className="text-xs font-semibold text-rose-600 mb-4">
-              {language === 'np' ? 'जीपीएस स्थान' : 'GPS Coordinates'}: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
+              {t.common.gpsCoordinates}: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
             </p>
 
             <p className="text-slate-600 text-xs sm:text-sm mb-6 leading-relaxed">

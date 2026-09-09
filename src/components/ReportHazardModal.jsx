@@ -224,9 +224,7 @@ export default function ReportHazardModal() {
             <span>{t.reportModal.onlineTitle}</span>
           </h2>
           <p className="text-slate-500 text-xs sm:text-sm mt-1">
-            {offlineMode
-              ? (language === 'np' ? 'इन्टरनेट बिना सिधा एसएमएस (१२३४) मार्फत आफ्नो जीपीएस स्थानसहित रिपोर्ट पठाउनुहोस्।' : 'Low latency offline emergency report dispatched directly via SMS 1234.')
-              : t.reportModal.onlineSub}
+            {offlineMode ? t.reportModal.offlineMessage : t.reportModal.onlineSub}
           </p>
 
           <div className="mt-3 flex items-center gap-2">
@@ -237,7 +235,7 @@ export default function ReportHazardModal() {
                   : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
               }`}
             >
-              {offlineMode ? 'Saved locally · syncs when online' : 'Synced to backend'}
+              {offlineMode ? t.reportModal.localStatus : t.reportModal.syncedStatus}
             </span>
           </div>
         </div>
@@ -353,7 +351,7 @@ export default function ReportHazardModal() {
                 <div className="flex items-center gap-2">
                   <Navigation className="w-4 h-4 text-rose-600" />
                   <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                    {language === 'np' ? 'स्वतः पहिचान गरिएको जीपीएस स्थान' : 'Auto-Detected GPS Location'}
+                    {t.common.autoDetectedGps}
                   </span>
                 </div>
                 <button
@@ -363,7 +361,7 @@ export default function ReportHazardModal() {
                   className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
-                  <span>{isLocating ? 'Acquiring...' : 'Refresh GPS'}</span>
+                  <span>{isLocating ? t.common.acquiringGps : t.common.refreshGps}</span>
                 </button>
               </div>
 
@@ -373,14 +371,12 @@ export default function ReportHazardModal() {
                   <span>Lat: {userLocation.lat.toFixed(4)}, Lng: {userLocation.lng.toFixed(4)}</span>
                 </div>
                 <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                  GPS LOCKED
+                  {t.common.gpsLocked}
                 </span>
               </div>
 
               <p className="text-[11px] text-slate-500 leading-relaxed">
-                {language === 'np'
-                  ? 'इन्टरनेट नभएको बेला नक्सा लोड हुँदैन; तपाईंको यन्त्रको जीपीएस स्थान स्वतः एसएमएसमा पठाइनेछ।'
-                  : 'Map rendered offline is disabled. Your exact live device coordinates are encoded directly into the SMS payload for Nepal Emergency Services (1234).'}
+                {t.reportModal.offlineGpsNote}
               </p>
             </div>
           ) : (

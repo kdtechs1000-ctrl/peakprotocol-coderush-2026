@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useMode } from '../context/ModeContext';
-import { MapPin, Clock, Sparkles, AlertCircle, ShieldCheck, Filter } from 'lucide-react';
+import { Clock, Sparkles, ShieldCheck } from 'lucide-react';
+import { translateHazardType, translateSeverity } from '../i18n/translations';
 
 export default function RecentReports() {
-  const { reports, language, t } = useMode();
+  const { reports, language, t, translateLiveContent } = useMode();
   const [selectedFilter, setSelectedFilter] = useState('All');
 
   // Filter reports based on selected severity
@@ -14,15 +15,15 @@ export default function RecentReports() {
 
   // Calculate human-readable relative time
   const getRelativeTime = (timestamp) => {
-    if (!timestamp) return 'Just now';
+    if (!timestamp) return t.common.justNow;
     const diffMs = Date.now() - new Date(timestamp).getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    if (diffMins < 1) return language === 'np' ? 'भर्खरै' : 'Just now';
-    if (diffMins < 60) return `${diffMins}m ${language === 'np' ? 'अघि' : 'ago'}`;
+    if (diffMins < 1) return t.common.justNow;
+    if (diffMins < 60) return `${diffMins}m ${t.common.minutesAgo}`;
     const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ${language === 'np' ? 'अघि' : 'ago'}`;
+    if (diffHours < 24) return `${diffHours}h ${t.common.hoursAgo}`;
     const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays}d ${language === 'np' ? 'अघि' : 'ago'}`;
+    return `${diffDays}d ${t.common.daysAgo}`;
   };
 
   return (
@@ -30,7 +31,7 @@ export default function RecentReports() {
       {/* Title & Realtime Feed pill matching Screenshot 1 */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-          {language === 'np' ? 'हालैका रिपोर्टहरू' : 'Recent Reports'}
+          {t.common.recentReports}
         </h2>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -66,7 +67,7 @@ export default function RecentReports() {
           <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
             <ShieldCheck className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
             <p className="text-slate-600 font-medium">
-              {language === 'np' ? 'कुनै पनि सक्रिय रिपोर्टहरू भेटिएन।' : 'No active hazard reports for this severity level.'}
+              {t.common.noActiveReports}
             </p>
           </div>
         ) : (
@@ -84,12 +85,12 @@ export default function RecentReports() {
                 <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <h3 className="text-base sm:text-lg font-bold text-slate-900">
-                      {report.title}
+                      {translateLiveContent(report.title) || translateHazardType(language, report.hazard_type)}
                     </h3>
                     {report.ai_detected && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-purple-100 text-purple-700 border border-purple-200">
                         <Sparkles className="w-3 h-3" />
-                        AI DETECTED
+                        {t.common.aiDetected}
                       </span>
                     )}
                   </div>
@@ -98,17 +99,17 @@ export default function RecentReports() {
                   <div>
                     {isCritical && (
                       <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-rose-50 text-rose-600 border border-rose-200">
-                        CRITICAL
+                        {translateSeverity(language, 'CRITICAL')}
                       </span>
                     )}
                     {isModerate && (
                       <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-amber-50 text-amber-600 border border-amber-200">
-                        MODERATE
+                        {translateSeverity(language, 'MODERATE')}
                       </span>
                     )}
                     {isLow && (
                       <span className="px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">
-                        LOW
+                        {translateSeverity(language, 'LOW')}
                       </span>
                     )}
                   </div>
@@ -116,7 +117,7 @@ export default function RecentReports() {
 
                 {/* Description */}
                 <p className="text-slate-600 text-sm mb-4 leading-relaxed">
-                  {report.description}
+                  {translateLiveContent(report.description)}
                 </p>
 
                 {/* Metadata row: Coordinates + Timestamp */}
@@ -124,7 +125,7 @@ export default function RecentReports() {
                   <div className="flex items-center gap-1.5 text-slate-600 font-medium">
                     <span className="text-rose-500">📍</span>
                     <span>
-                      {language === 'np' ? 'निर्देशांक' : 'Coordinates'}: {report.latitude?.toFixed(3)}, {report.longitude?.toFixed(3)}
+                      {t.common.coordinates}: {report.latitude?.toFixed(3)}, {report.longitude?.toFixed(3)}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-400">

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useMode } from '../context/ModeContext';
-import { Send, CheckCircle2, Truck, Compass, ShieldAlert, HeartHandshake } from 'lucide-react';
+import { Send, CheckCircle2, Truck, Compass } from 'lucide-react';
 
 export default function VolunteerTourForm() {
-  const { isEmergencyMode, language } = useMode();
+  const { isEmergencyMode, t } = useMode();
   const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xdorqzye';
 
   const [status, setStatus] = useState('idle'); // idle, submitting, success, error
@@ -56,22 +56,25 @@ export default function VolunteerTourForm() {
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <h4 className="text-xl font-bold text-slate-900 mb-2">
-          {isEmergencyMode ? 'Relief Resource Registered!' : 'Trek Booking Requested!'}
+          {isEmergencyMode ? t.volunteerTour.emergencySuccessTitle : t.volunteerTour.tourismSuccessTitle}
         </h4>
         <p className="text-sm text-slate-600 mb-6">
           {isEmergencyMode
-            ? 'Thank you for standing with Nepal. NDRRMA emergency logistics desk will dispatch your unit as needs arise.'
-            : 'Your expedition request has been routed to our certified Sherpa guide network. We will contact you within 2 hours.'}
+            ? t.volunteerTour.emergencySuccessText
+            : t.volunteerTour.tourismSuccessText}
         </p>
         <button
           onClick={() => setStatus('idle')}
           className="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-colors"
         >
-          Submit Another
+          {t.volunteerTour.submitAnother}
         </button>
       </div>
     );
   }
+
+  const headingText = isEmergencyMode ? t.volunteerTour.emergencyTitle : t.volunteerTour.tourismTitle;
+  const descriptionText = isEmergencyMode ? t.volunteerTour.emergencyDescription : t.volunteerTour.tourismDescription;
 
   return (
     <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm max-w-2xl mx-auto">
@@ -84,14 +87,10 @@ export default function VolunteerTourForm() {
         </div>
         <div>
           <h3 className="text-lg sm:text-xl font-bold text-slate-900">
-            {isEmergencyMode
-              ? (language === 'np' ? 'राहत उद्धार स्वयंसेवक तथा सवारी दर्ता' : 'Register 4x4 Vehicle & Relief Volunteer Resource')
-              : (language === 'np' ? 'प्रमाणित ट्रेकिङ गाइड तथा भ्रमण बुकिङ' : 'Book Himalayan Trek & Certified Guide')}
+            {headingText}
           </h3>
           <p className="text-xs text-slate-500 mt-1">
-            {isEmergencyMode
-              ? 'Pivot tourism transport and mountaineering skills toward national flood and landslide evacuation.'
-              : 'Explore the Himalayas with licensed local Sherpa guides and comprehensive safety monitoring.'}
+            {descriptionText}
           </p>
         </div>
       </div>
@@ -232,7 +231,7 @@ export default function VolunteerTourForm() {
           }`}
         >
           <Send className="w-4 h-4" />
-          <span>{isEmergencyMode ? 'Register Resource for Relief Deployment' : 'Confirm Tour Inquiry'}</span>
+          <span>{isEmergencyMode ? t.volunteerTour.emergencyButton : t.volunteerTour.tourismButton}</span>
         </button>
       </form>
     </div>

@@ -5,7 +5,6 @@ import {
   Compass, 
   FileText, 
   ShieldCheck, 
-  User, 
   AlertTriangle, 
   Palmtree, 
   Radio, 
@@ -58,7 +57,7 @@ export default function Header() {
               )}
             </div>
             <p className="text-[11px] text-slate-500 font-medium hidden sm:block">
-              {language === 'np' ? 'राष्ट्रिय आपतकालीन उद्धार तथा सुरक्षा नेटवर्क' : 'National Emergency Response Network'}
+              {t.subTitle}
             </p>
           </div>
         </div>
@@ -126,18 +125,6 @@ export default function Header() {
             <span>{t.tabs.safeZones}</span>
           </button>
 
-          {/* Account / Admin */}
-          <button
-            onClick={() => setActiveTab('account')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all whitespace-nowrap ${
-              activeTab === 'account'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            <span>{t.tabs.account}</span>
-          </button>
         </nav>
 
         {/* Right: Language switch + Dual Mode Toggle */}
@@ -155,14 +142,14 @@ export default function Header() {
             {isEmergencyMode ? (
               <>
                 <AlertTriangle className="w-3.5 h-3.5 text-rose-600 animate-bounce" />
-                <span className="hidden md:inline">Emergency Mode</span>
-                <span className="md:hidden">Emergency</span>
+                <span className="hidden md:inline">{t.disasterMode}</span>
+                <span className="md:hidden">{t.disasterMode}</span>
               </>
             ) : (
               <>
                 <Palmtree className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="hidden md:inline">Tourism Mode</span>
-                <span className="md:hidden">Tourism</span>
+                <span className="hidden md:inline">{t.tourismMode}</span>
+                <span className="md:hidden">{t.tourismMode}</span>
               </>
             )}
           </button>

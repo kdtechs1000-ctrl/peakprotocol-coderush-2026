@@ -41,9 +41,9 @@ export default function EmergencyHotlines() {
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <h3 className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
           <Phone className="w-4 h-4 text-emerald-400" />
-          <span>{language === 'np' ? 'आपतकालीन हटलाइनहरू' : 'National Emergency Hotlines'}</span>
+          <span>{t.hotlines.title}</span>
         </h3>
-        <span className="text-[11px] text-slate-400 font-medium">Toll-Free Direct Dispatch</span>
+        <span className="text-[11px] text-slate-400 font-medium">{t.hotlines.sub}</span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

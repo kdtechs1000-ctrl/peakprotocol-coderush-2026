@@ -88,8 +88,6 @@ function AppContent() {
             {activeTab === 'planRoute' && <PlanRoute />}
 
             {activeTab === 'safeZones' && <SafeZones />}
-
-
           </>
         )}
       </main>
@@ -103,13 +101,13 @@ function AppContent() {
       {/* 7. Footer */}
       <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between flex-wrap gap-2">
-          <p>© 2026 Peak Protocol & Travel Safety Network. In collaboration with NDRRMA, DHM, BIPAD & Nepal Army.</p>
+          <p>© 2026 Peak Protocol & Travel Safety Network. {t.footer.collaboration}</p>
           <div className="flex items-center gap-4">
-            <span className="text-emerald-600 font-semibold">PostGIS Enabled</span>
+            <span className="text-emerald-600 font-semibold">{t.footer.postgis}</span>
             <span>•</span>
-            <span className="text-purple-600 font-semibold">Gemini AI Detection</span>
+            <span className="text-purple-600 font-semibold">{t.footer.gemini}</span>
             <span>•</span>
-            <span className="text-blue-600 font-semibold">PWA Offline Sync</span>
+            <span className="text-blue-600 font-semibold">{t.footer.offlineSync}</span>
           </div>
         </div>
       </footer>
